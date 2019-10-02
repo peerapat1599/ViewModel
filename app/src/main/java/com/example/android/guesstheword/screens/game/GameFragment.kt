@@ -25,7 +25,6 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import com.example.android.guesstheword.R
@@ -66,6 +65,9 @@ class GameFragment : Fragment() {
         viewModel.word.observe(this, Observer { newWord ->
             binding.wordText.text = newWord
         })
+        viewModel.eventGameFinish.observe(this, Observer<Boolean> { hasFinished ->
+            if (hasFinished) gameFinished()
+        })
         return binding.root
 
     }
@@ -90,6 +92,7 @@ class GameFragment : Fragment() {
         val action = GameFragmentDirections.actionGameToScore()
         action.score = viewModel.score.value?:0
         NavHostFragment.findNavController(this).navigate(action)
+        viewModel.onGameFinishComplete()
     }
 
 }
